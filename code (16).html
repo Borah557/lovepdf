@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRX Nebula Miner - 2025</title>
+    <style>
+        /* --- Configuration & Reset --- */
+        :root {
+            --primary-red: #C62828; /* Darker Red */
+            --secondary-red: #E53935; /* Medium Red */
+            --accent-red: #F44336;   /* Brighter Red */
+            --gradient-red: linear-gradient(135deg, var(--secondary-red), var(--primary-red));
+            --dark-bg-primary: #121212; /* Near Black */
+            --dark-bg-secondary: #1e1e1e; /* Dark Gray */
+            --dark-bg-tertiary: #2a2a2a; /* Slightly Lighter Gray */
+            --text-primary: #e0e0e0; /* Light Gray */
+            --text-secondary: #b0b0b0; /* Medium Gray */
+            --text-white: #ffffff;
+            --success-green: #4CAF50;
+            --border-color: #333333;
+            --border-radius-sm: 4px;
+            --border-radius-md: 8px;
+            --border-radius-lg: 12px;
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.4);
+            --font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            --transition-speed: 0.3s;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--dark-bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            font-size: 16px;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+
+        /* --- Basic Elements & Utilities --- */
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--text-white);
+            margin-bottom: 0.75em;
+            line-height: 1.3;
+            font-weight: 600;
+        }
+        h1 { font-size: 2.5rem; }
+        h2 { font-size: 2rem; }
+        h3 { font-size: 1.5rem; }
+        h4 { font-size: 1.2rem; }
+
+        p {
+            margin-bottom: 1em;
+            color: var(--text-secondary);
+        }
+
+        a {
+            color: var(--secondary-red);
+            text-decoration: none;
+            transition: color var(--transition-speed) ease;
+        }
+        a:hover {
+            color: var(--accent-red);
+        }
+
+        img, svg {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .hidden { display: none !important; }
+        .text-center { text-align: center; }
+        .text-success { color: var(--success-green); }
+        .text-error { color: var(--accent-red); }
+        .bold { font-weight: bold; }
+        .mb-1 { margin-bottom: 0.5rem; }
+        .mb-2 { margin-bottom: 1rem; }
+        .mb-3 { margin-bottom: 1.5rem; }
+        .mt-1 { margin-top: 0.5rem; }
+        .mt-2 { margin-top: 1rem; }
+        .mt-3 { margin-top: 1.5rem; }
+
+        /* --- Layout: View Container --- */
+        .view {
+            display: none; /* Hidden by default */
+            min-height: 100vh;
+            padding: 1rem;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .view.active-view {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem; /* Padding for content within container */
+        }
+
+        /* --- App Header (Inside Dashboard etc.) --- */
+        .app-header {
+            background-color: var(--dark-bg-secondary);
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky; /* Make header sticky */
+            top: 0;
+            z-index: 100;
+            margin: -1rem -1rem 2rem -1rem; /* Adjust for view padding */
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--text-white);
+            display: flex;
+            align-items: center;
+        }
+        .logo svg { /* Placeholder for logo icon */
+            width: 28px;
+            height: 28px;
+            margin-right: 0.5rem;
+            fill: var(--primary-red);
+        }
+
+        .main-nav ul {
+            list-style: none;
+            display: flex;
+            gap: 1rem;
+        }
+        .main-nav a {
+            color: var(--text-secondary);
+            padding: 0.5rem 0.8rem;
+            border-radius: var(--border-radius-sm);
+            transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+            font-weight: 500;
+        }
+        .main-nav a.active,
+        .main-nav a:hover {
+            color: var(--text-white);
+            background-color: var(--dark-bg-tertiary);
+        }
+        .main-nav a.logout-btn {
+            color: var(--accent-red);
+        }
+        .main-nav a.logout-btn:hover {
+            background-color: rgba(244, 67, 54, 0.1);
+        }
+
+        .mobile-menu-toggle {
+            display: none; /* Hidden on desktop */
+            background: none;
+            border: none;
+            color: var(--text-white);
+            font-size: 1.8rem;
+            cursor: pointer;
+        }
+
+        /* --- Buttons --- */
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.8rem;
+            border: none;
+            border-radius: var(--border-radius-md);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: center;
+            transition: all var(--transition-speed) ease;
+            box-shadow: var(--shadow-sm);
+        }
+        .btn:active {
+             transform: scale(0.98);
+             box-shadow: none;
+        }
+
+        .btn-primary {
+            background: var(--gradient-red);
+            color: var(--text-white);
+        }
+        .btn-primary:hover {
+            filter: brightness(1.1);
+            box-shadow: 0 6px 12px rgba(200, 40, 40, 0.3);
+        }
+
+        .btn-secondary {
+             background-color: var(--dark-bg-tertiary);
+             color: var(--text-primary);
+             border: 1px solid var(--border-color);
+        }
+        .btn-secondary:hover {
+             background-color: #3a3a3a;
+             border-color: #444;
+        }
+         .btn-small {
+             padding: 0.5rem 1rem;
+             font-size: 0.9rem;
+         }
+         .btn-block {
+             display: block;
+             width: 100%;
+         }
+
+        /* --- Forms --- */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .form-control {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            background-color: var(--dark-bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-red);
+            box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.3);
+        }
+        .form-control::placeholder {
+            color: #666;
+        }
+        .input-group {
+            display: flex;
+            align-items: center;
+        }
+        .input-group .form-control {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+            flex-grow: 1;
+        }
+        .input-group-append .btn {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            box-shadow: none; /* Prevent double shadow */
+        }
+
+        /* --- Cards --- */
+        .card {
+            background-color: var(--dark-bg-secondary);
+            border-radius: var(--border-radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+            transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.5);
+        }
+        .card-header {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .card-header svg { /* Icon in header */
+             width: 24px; height: 24px; fill: var(--primary-red);
+        }
+        .card-title {
+            margin-bottom: 0; /* Reset margin for title in header */
+             font-size: 1.2rem;
+             color: var(--text-white);
+        }
+        .card-body {
+             /* Styles for card content */
+        }
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--text-white);
+            display: block;
+            margin-top: 0.25rem;
+        }
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .card-vector {
+            position: absolute;
+            bottom: -20px;
+            right: -20px;
+            width: 100px;
+            height: 100px;
+            opacity: 0.05;
+            pointer-events: none;
+            fill: var(--text-white); /* Adjust color if needed */
+        }
+
+        /* --- Login/Auth View --- */
+        #login-view {
+            display: flex; /* Initially visible */
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            background: var(--dark-bg-primary); /* Ensure background covers */
+        }
+        .auth-box {
+            background-color: var(--dark-bg-secondary);
+            padding: 2rem 2.5rem;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-md);
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            border: 1px solid var(--border-color);
+        }
+        .auth-box .logo-container {
+             margin-bottom: 1.5rem;
+        }
+         .auth-box .logo-container svg { /* Big logo */
+             width: 60px; height: 60px; margin: 0 auto 0.5rem auto; fill: var(--primary-red);
+         }
+         .auth-box h2 {
+            margin-bottom: 0.5rem;
+            color: var(--text-white);
+         }
+         .auth-box p {
+             color: var(--text-secondary);
+             margin-bottom: 2rem;
+             font-size: 1rem;
+         }
+         .auth-vector {
+             max-width: 180px;
+             margin: 0 auto 2rem auto;
+             opacity: 0.8;
+             /* SVG code or <img> tag here */
+             /* Example: */
+             /* <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="var(--primary-red)"/></svg> */
+         }
+         .auth-note {
+             font-size: 0.85rem;
+             color: var(--text-secondary);
+             margin-top: 1.5rem;
+         }
+
+        /* --- Dashboard View --- */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .dashboard-grid .card { margin-bottom: 0; } /* Remove bottom margin for grid items */
+
+        .referral-card input {
+            margin-bottom: 0.8rem;
+        }
+
+        /* --- History/Activity List --- */
+        .activity-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .activity-item {
+            background-color: var(--dark-bg-tertiary);
+            padding: 1rem 1.5rem;
+            border-radius: var(--border-radius-md);
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            border: 1px solid var(--border-color);
+            transition: background-color var(--transition-speed) ease;
+        }
+        .activity-item:hover {
+            background-color: #333;
+        }
+        .activity-item:last-child { margin-bottom: 0; }
+
+        .activity-details { flex-grow: 1; }
+        .activity-type {
+            font-weight: 600;
+            color: var(--text-white);
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+        .activity-type .icon { /* Placeholder for icons */
+            display: inline-block;
+            width: 1em; height: 1em;
+            margin-right: 0.3em;
+            vertical-align: middle;
+        }
+        .activity-type .icon-withdraw { color: var(--accent-red); }
+        .activity-type .icon-deposit { color: var(--success-green); }
+        .activity-type .icon-plan { color: #4FC3F7; } /* Light Blue */
+        .activity-type .icon-bonus { color: #FFB74D; } /* Orange */
+
+        .activity-timestamp {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .activity-amount {
+            font-weight: bold;
+            font-size: 1.1rem;
+            white-space: nowrap;
+        }
+        .amount-positive { color: var(--success-green); }
+        .amount-negative { color: var(--accent-red); }
+
+
+        /* --- Plans View --- */
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        .plan-card {
+            text-align: center;
+             border: 2px solid var(--dark-bg-tertiary); /* Default border */
+        }
+        .plan-card.popular {
+             border-color: var(--primary-red);
+             transform: scale(1.03); /* Make popular stand out */
+        }
+         .plan-card .card-header {
+             justify-content: center; /* Center header content */
+             border-bottom: none;
+             margin-bottom: 0.5rem;
+             padding-bottom: 0.5rem;
+         }
+         .plan-card .plan-name {
+             font-size: 1.3rem;
+             color: var(--text-white);
+             margin-bottom: 0.5rem;
+         }
+         .plan-price {
+             font-size: 2.2rem;
+             font-weight: bold;
+             color: var(--primary-red);
+             margin-bottom: 1rem;
+         }
+         .plan-price .currency { font-size: 1.5rem; }
+         .plan-features {
+             list-style: none;
+             padding: 0;
+             margin: 1.5rem 0;
+             color: var(--text-secondary);
+             text-align: left;
+         }
+         .plan-features li {
+             margin-bottom: 0.8rem;
+             display: flex;
+             align-items: center;
+             gap: 0.5rem;
+         }
+         .plan-features svg { /* Checkmark icon */
+              width: 18px; height: 18px; fill: var(--success-green); flex-shrink: 0;
+         }
+        .plan-card .btn { margin-top: 1rem; }
+
+        /* --- Modals (Optional - for confirmations) --- */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity var(--transition-speed) ease, visibility var(--transition-speed) ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background-color: var(--dark-bg-secondary);
+            padding: 2rem;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-md);
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            transform: scale(0.9);
+            transition: transform var(--transition-speed) ease;
+        }
+        .modal-overlay.active .modal-content {
+             transform: scale(1);
+        }
+        .modal-close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        /* --- Footer --- */
+        .app-footer {
+            text-align: center;
+            padding: 1.5rem 1rem;
+            margin-top: 3rem;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            background-color: var(--dark-bg-secondary);
+             margin-left: -1rem; /* Adjust for view padding */
+             margin-right: -1rem;
+             margin-bottom: -1rem;
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.7rem; }
+            h3 { font-size: 1.3rem; }
+
+            .container {
+                padding: 0 0.5rem;
+            }
+
+            .app-header {
+                padding: 0.8rem 0.5rem;
+                margin: -1rem -0.5rem 1.5rem -0.5rem; /* Adjust for container padding */
+                position: relative; /* Allow nav to position below */
+            }
+
+            .main-nav {
+                display: none; /* Hide desktop nav */
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background-color: var(--dark-bg-secondary);
+                box-shadow: var(--shadow-md);
+                border-top: 1px solid var(--border-color);
+                padding: 1rem 0;
+            }
+            .main-nav.active {
+                display: block; /* Show mobile nav */
+            }
+            .main-nav ul {
+                flex-direction: column;
+                gap: 0;
+            }
+            .main-nav li {
+                text-align: center;
+            }
+            .main-nav a {
+                display: block;
+                padding: 0.8rem 1rem;
+                border-radius: 0;
+            }
+            .main-nav a:hover, .main-nav a.active {
+                background-color: var(--dark-bg-tertiary);
+            }
+
+
+            .mobile-menu-toggle {
+                display: block; /* Show hamburger */
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr; /* Stack cards */
+                gap: 1rem;
+            }
+
+            .activity-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .activity-amount {
+                margin-top: 0.5rem;
+                align-self: flex-end;
+            }
+
+            .plans-grid {
+                 grid-template-columns: 1fr; /* Stack plans */
+            }
+
+             .auth-box {
+                 padding: 1.5rem;
+             }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- ======== Login/Register View ======== -->
+    <div id="login-view" class="view active-view">
+        <div class="auth-box">
+            <div class="logo-container">
+                 <!-- SVG Placeholder: Logo Icon -->
+                 <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg> <!-- Example simple icon -->
+                 <h2>TRX Nebula Miner</h2>
+            </div>
+            <p>Enter your TRX Address to Connect</p>
+
+            <!-- SVG Placeholder: Auth Illustration -->
+            <div class="auth-vector mb-3">
+                <svg viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="10" y="10" width="80" height="40" rx="5" ry="5" fill="var(--dark-bg-tertiary)" />
+                    <circle cx="30" cy="30" r="8" fill="var(--primary-red)" />
+                    <rect x="45" y="20" width="40" height="8" rx="2" ry="2" fill="var(--text-secondary)" />
+                    <rect x="45" y="32" width="30" height="8" rx="2" ry="2" fill="var(--text-secondary)" />
+                </svg>
+            </div>
+
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="trxAddress" class="hidden">TRX Wallet Address</label>
+                    <input type="text" id="trxAddress" class="form-control" placeholder="Enter your TRX Address (e.g., T...)" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Connect Wallet</button>
+                 <div id="login-error" class="text-error mt-2" style="min-height: 1.2em;"></div>
+            </form>
+            <p class="auth-note">Connecting simulates login. No real wallet interaction occurs in this demo.</p>
+        </div>
+    </div>
+
+    <!-- ======== Dashboard View ======== -->
+    <div id="dashboard-view" class="view">
+        <header class="app-header">
+            <div class="logo">
+                <!-- SVG Placeholder: Logo Icon -->
+                 <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+                 <span>Nebula Miner</span>
+            </div>
+            <nav class="main-nav" id="main-nav">
+                <ul>
+                    <li><a href="#" class="nav-link active" data-view="dashboard-view">Dashboard</a></li>
+                    <li><a href="#" class="nav-link" data-view="plans-view">Plans</a></li>
+                    <li><a href="#" class="nav-link" data-view="withdraw-view">Withdraw</a></li>
+                    <li><a href="#" class="nav-link" data-view="history-view">History</a></li>
+                    <li><a href="#" id="logout-button" class="logout-btn">Logout</a></li>
+                </ul>
+            </nav>
+            <button class="mobile-menu-toggle" id="mobile-menu-toggle">☰</button>
+        </header>
+
+        <main class="container">
+            <h2 class="mb-3">Welcome Back!</h2>
+
+            <div class="dashboard-grid">
+                <div class="card">
+                    <div class="card-header">
+                         <!-- SVG Placeholder: Wallet Icon -->
+                         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+                        <h4 class="card-title">Current Balance</h4>
+                    </div>
+                    <div class="card-body">
+                        <span id="balance-value" class="stat-value">0.000000 TRX</span>
+                        <span class="stat-label">Available to Withdraw</span>
+                    </div>
+                     <!-- SVG Placeholder: Abstract background vector -->
+                     <svg class="card-vector" viewBox="0 0 100 100"><path d="M0 0 L50 100 L100 0 Z" opacity="0.5"/></svg>
+                </div>
+
+                <div class="card">
+                     <div class="card-header">
+                         <!-- SVG Placeholder: Speed/Mining Icon -->
+                         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.66 7.93L12 2.27 6.34 7.93a8 8 0 1 0 11.32 0zM12 19.54c-1.78 0-3.4-1.04-4.05-2.54l1.7-.7c.4.94 1.29 1.58 2.35 1.58s1.95-.64 2.35-1.58l1.7.7c-.65 1.5-2.27 2.54-4.05 2.54z"/></svg>
+                         <h4 class="card-title">Mining Speed</h4>
+                    </div>
+                     <div class="card-body">
+                         <span id="speed-value" class="stat-value">0.0000 TRX/Hr</span>
+                         <span class="stat-label" id="current-plan-name">Basic Plan</span>
+                     </div>
+                     <svg class="card-vector" viewBox="0 0 100 100"><path d="M50 0 L100 50 L50 100 L0 50 Z" opacity="0.5"/></svg>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                         <!-- SVG Placeholder: Total/Chart Icon -->
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11V3H8v6H2v12h20V11h-6zm-6-6h4v14h-4V5zm-6 6h4v8H4v-8zm16 8h-4v-6h4v6z"/></svg>
+                         <h4 class="card-title">Total Mined</h4>
+                    </div>
+                     <div class="card-body">
+                         <span id="total-mined-value" class="stat-value">0.000000 TRX</span>
+                         <span class="stat-label">Lifetime Earnings</span>
+                     </div>
+                    <svg class="card-vector" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" opacity="0.5"/></svg>
+                </div>
+
+                 <div class="card referral-card">
+                    <div class="card-header">
+                         <!-- SVG Placeholder: Users/Referral Icon -->
+                         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                        <h4 class="card-title">Referral Program</h4>
+                    </div>
+                     <div class="card-body">
+                         <p class="mb-1">Share your link to earn rewards!</p>
+                         <div class="input-group mb-2">
+                             <input type="text" id="referral-link" class="form-control" readonly value="https://yoursite.com/ref/...">
+                             <div class="input-group-append">
+                                 <button id="copy-ref-btn" class="btn btn-secondary btn-small">Copy</button>
+                             </div>
+                         </div>
+                         <span id="copy-status" class="text-success bold" style="font-size: 0.9em;"></span>
+                     </div>
+                </div>
+            </div>
+
+            <section class="recent-activity mt-3">
+                <h3 class="mb-2">Recent Activity</h3>
+                 <div id="activity-list-container" class="card">
+                     <div class="card-body">
+                        <ul class="activity-list" id="activity-list">
+                            <!-- Activity items will be loaded here by JS -->
+                            <li class="activity-item">Loading activity...</li>
+                        </ul>
+                     </div>
+                 </div>
+            </section>
+        </main>
+
+        <footer class="app-footer">
+            &copy; 2024-2025 TRX Nebula Miner. All Rights Reserved. (Simulation Only)
+        </footer>
+    </div>
+
+    <!-- ======== Plans View ======== -->
+    <div id="plans-view" class="view">
+         <header class="app-header">
+             <div class="logo">
+                 <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+                 <span>Nebula Miner</span>
+             </div>
+             <nav class="main-nav" id="main-nav-plans">
+                 <ul>
+                    <li><a href="#" class="nav-link" data-view="dashboard-view">Dashboard</a></li>
+                    <li><a href="#" class="nav-link active" data-view="plans-view">Plans</a></li>
+                    <li><a href="#" class="nav-link" data-view="withdraw-view">Withdraw</a></li>
+                    <li><a href="#" class="nav-link" data-view="history-view">History</a></li>
+                    <li><a href="#" id="logout-button-plans" class="logout-btn">Logout</a></li>
+                </ul>
+             </nav>
+             <button class="mobile-menu-toggle" id="mobile-menu-toggle-plans">☰</button>
+         </header>
+
+        <main class="container">
+            <h2 class="text-center mb-3">Upgrade Your Mining Power</h2>
+            <p class="text-center text-secondary mb-3">Choose a plan that suits your needs to increase your TRX earnings.</p>
+
+            <div class="plans-grid" id="plans-list">
+                <!-- Plan cards loaded by JS -->
+                 <div class="card plan-card">Loading plans...</div>
+            </div>
+             <div id="plan-purchase-status" class="text-center mt-3" style="min-height: 1.2em;"></div>
+        </main>
+
+        <footer class="app-footer">
+            &copy; 2024-2025 TRX Nebula Miner. All Rights Reserved. (Simulation Only)
+        </footer>
+    </div>
+
+    <!-- ======== Withdraw View ======== -->
+    <div id="withdraw-view" class="view">
+         <header class="app-header">
+              <div class="logo">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+                  <span>Nebula Miner</span>
+              </div>
+              <nav class="main-nav" id="main-nav-withdraw">
+                  <ul>
+                    <li><a href="#" class="nav-link" data-view="dashboard-view">Dashboard</a></li>
+                    <li><a href="#" class="nav-link" data-view="plans-view">Plans</a></li>
+                    <li><a href="#" class="nav-link active" data-view="withdraw-view">Withdraw</a></li>
+                    <li><a href="#" class="nav-link" data-view="history-view">History</a></li>
+                    <li><a href="#" id="logout-button-withdraw" class="logout-btn">Logout</a></li>
+                </ul>
+              </nav>
+              <button class="mobile-menu-toggle" id="mobile-menu-toggle-withdraw">☰</button>
+         </header>
+
+        <main class="container">
+            <div class="card" style="max-width: 600px; margin: 2rem auto;">
+                 <div class="card-header">
+                      <!-- SVG Placeholder: Withdraw Icon -->
+                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 11h8V3H3v8zm2-6h4v4H5V5zm8 14h8v-8h-8v8zm2-6h4v4h-4v-4zM3 21h8v-8H3v8zm2-6h4v4H5v-4zm13-2l-5-5v4H9v2h4v4l5-5z"/></svg>
+                     <h3 class="card-title">Withdraw TRX</h3>
+                 </div>
+                 <div class="card-body">
+                    <p class="text-secondary mb-2">Withdraw your mined TRX directly to your connected wallet address.</p>
+                    <p class="mb-3">Your Address: <strong id="withdraw-address" class="text-white">T...</strong></p>
+                    <p class="mb-1">Available Balance: <strong id="withdraw-available" class="text-white">0.000000 TRX</strong></p>
+                    <p class="text-secondary mb-3" style="font-size: 0.9em;">Minimum Withdrawal: <span id="min-withdraw">10</span> TRX | Fee: <span id="withdraw-fee">1</span> TRX</p>
+
+                    <form id="withdraw-form">
+                        <div class="form-group">
+                            <label for="withdraw-amount">Amount to Withdraw</label>
+                            <input type="number" id="withdraw-amount" class="form-control" placeholder="Enter amount" step="0.000001" min="0" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Request Withdrawal</button>
+                        <div id="withdraw-status" class="text-center mt-3" style="min-height: 1.2em;"></div>
+                    </form>
+                 </div>
+            </div>
+        </main>
+
+         <footer class="app-footer">
+             &copy; 2024-2025 TRX Nebula Miner. All Rights Reserved. (Simulation Only)
+         </footer>
+    </div>
+
+    <!-- ======== History View ======== -->
+    <div id="history-view" class="view">
+         <header class="app-header">
+              <div class="logo">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+                  <span>Nebula Miner</span>
+              </div>
+              <nav class="main-nav" id="main-nav-history">
+                   <ul>
+                    <li><a href="#" class="nav-link" data-view="dashboard-view">Dashboard</a></li>
+                    <li><a href="#" class="nav-link" data-view="plans-view">Plans</a></li>
+                    <li><a href="#" class="nav-link" data-view="withdraw-view">Withdraw</a></li>
+                    <li><a href="#" class="nav-link active" data-view="history-view">History</a></li>
+                    <li><a href="#" id="logout-button-history" class="logout-btn">Logout</a></li>
+                </ul>
+              </nav>
+              <button class="mobile-menu-toggle" id="mobile-menu-toggle-history">☰</button>
+         </header>
+
+        <main class="container">
+            <h2 class="mb-3">Transaction History</h2>
+
+            <div class="card">
+                <div class="card-body">
+                    <ul class="activity-list" id="full-history-list">
+                        <!-- Full history loaded here -->
+                        <li class="activity-item">Loading history...</li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+
+         <footer class="app-footer">
+             &copy; 2024-2025 TRX Nebula Miner. All Rights Reserved. (Simulation Only)
+         </footer>
+    </div>
+
+
+    <!-- ======== JavaScript (Simulation Logic) ======== -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- State Variables (Simulated Backend) ---
+            let currentUserAddress = null;
+            let userBalance = 0.0;
+            let miningSpeedPerHour = 0.001; // TRX per hour (Basic Plan)
+            let totalMined = 0.0;
+            let currentPlan = { id: 1, name: 'Basic Plan', speed: 0.001 };
+            let referralLink = '';
+            let transactionHistory = []; // Array of objects { type, amount, timestamp, details }
+            let miningInterval = null;
+            const MIN_WITHDRAWAL = 10;
+            const WITHDRAWAL_FEE = 1;
+
+            const mockPlans = [
+                { id: 1, name: 'Basic Plan', price: 0, speed: 0.001, features: ["0.001 TRX/Hour", "Basic Support", "1% Referral Bonus"] },
+                { id: 2, name: 'Standard Miner', price: 50, speed: 0.01, features: ["0.01 TRX/Hour", "Standard Support", "3% Referral Bonus", "Faster Withdrawals"], popular: true },
+                { id: 3, name: 'Pro Miner', price: 200, speed: 0.05, features: ["0.05 TRX/Hour", "Priority Support", "5% Referral Bonus", "Instant Withdrawals"] },
+                { id: 4, name: 'Nebula Rig', price: 1000, speed: 0.3, features: ["0.3 TRX/Hour", "Dedicated Support", "10% Referral Bonus", "VIP Perks"] }
+            ];
+
+            // --- DOM Elements ---
+            const views = document.querySelectorAll('.view');
+            const loginView = document.getElementById('login-view');
+            const dashboardView = document.getElementById('dashboard-view');
+            const loginForm = document.getElementById('login-form');
+            const trxAddressInput = document.getElementById('trxAddress');
+            const loginError = document.getElementById('login-error');
+
+            // Dashboard Elements
+            const balanceValueEl = document.getElementById('balance-value');
+            const speedValueEl = document.getElementById('speed-value');
+            const totalMinedValueEl = document.getElementById('total-mined-value');
+            const currentPlanNameEl = document.getElementById('current-plan-name');
+            const referralLinkInput = document.getElementById('referral-link');
+            const copyRefBtn = document.getElementById('copy-ref-btn');
+            const copyStatusEl = document.getElementById('copy-status');
+            const activityListEl = document.getElementById('activity-list');
+
+            // Plans Elements
+            const plansListEl = document.getElementById('plans-list');
+            const planPurchaseStatusEl = document.getElementById('plan-purchase-status');
+
+            // Withdraw Elements
+            const withdrawAddressEl = document.getElementById('withdraw-address');
+            const withdrawAvailableEl = document.getElementById('withdraw-available');
+            const withdrawAmountInput = document.getElementById('withdraw-amount');
+            const withdrawForm = document.getElementById('withdraw-form');
+            const withdrawStatusEl = document.getElementById('withdraw-status');
+            const minWithdrawEl = document.getElementById('min-withdraw');
+            const withdrawFeeEl = document.getElementById('withdraw-fee');
+
+            // History Elements
+            const fullHistoryListEl = document.getElementById('full-history-list');
+
+            // Navigation Elements
+            const navLinks = document.querySelectorAll('.nav-link');
+            const logoutButtons = document.querySelectorAll('.logout-btn'); // All logout buttons
+            const mobileMenuToggles = document.querySelectorAll('.mobile-menu-toggle');
+            const navMenus = document.querySelectorAll('.main-nav'); // All nav menus
+
+            // --- Helper Functions ---
+            function showView(viewId) {
+                views.forEach(view => view.classList.remove('active-view'));
+                const activeView = document.getElementById(viewId);
+                if (activeView) {
+                    activeView.classList.add('active-view');
+                    // Update active state for nav links across all nav bars
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.dataset.view === viewId) {
+                            link.classList.add('active');
+                        }
+                    });
+                    // Close mobile menu if open
+                    navMenus.forEach(menu => menu.classList.remove('active'));
+                } else {
+                    console.error("View not found:", viewId);
+                     // Fallback to login if view is invalid and user isn't logged in
+                     if (!currentUserAddress) document.getElementById('login-view').classList.add('active-view');
+                }
+            }
+
+            function formatTRX(amount) {
+                return amount.toFixed(6) + ' TRX';
+            }
+
+            function formatTimestamp(timestamp) {
+                return new Date(timestamp).toLocaleString();
+            }
+
+            function isValidTRXAddress(address) {
+                // Basic check: Starts with T and is ~34 chars long. NOT a real validation.
+                return typeof address === 'string' && address.startsWith('T') && address.length >= 30 && address.length <= 35;
+            }
+
+            function addTransaction(type, amount, details = '') {
+                 const transaction = {
+                     type: type, // 'deposit', 'withdraw', 'plan_purchase', 'mining', 'bonus'
+                     amount: amount,
+                     timestamp: Date.now(),
+                     details: details
+                 };
+                 transactionHistory.unshift(transaction); // Add to the beginning
+                 if (transactionHistory.length > 50) { // Keep history manageable
+                     transactionHistory.pop();
+                 }
+                 updateActivityLists(); // Update UI
+            }
+
+             function updateActivityLists() {
+                 renderActivityList(activityListEl, 5); // Show last 5 on dashboard
+                 renderActivityList(fullHistoryListEl, transactionHistory.length); // Show all on history page
+             }
+
+             function renderActivityList(listElement, count) {
+                 if (!listElement) return;
+                 listElement.innerHTML = ''; // Clear existing items
+                 const itemsToShow = transactionHistory.slice(0, count);
+
+                 if (itemsToShow.length === 0) {
+                     listElement.innerHTML = '<li class="activity-item">No activity yet.</li>';
+                     return;
+                 }
+
+                 itemsToShow.forEach(tx => {
+                     const li = document.createElement('li');
+                     li.className = 'activity-item';
+
+                      let iconClass = '';
+                      let amountClass = tx.amount >= 0 ? 'amount-positive' : 'amount-negative';
+                      let amountPrefix = tx.amount >= 0 ? '+' : '';
+                      let typeText = tx.type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()); // Capitalize
+
+                      switch (tx.type) {
+                           case 'withdraw': iconClass = 'icon-withdraw'; typeText = 'Withdrawal'; break;
+                           case 'deposit': iconClass = 'icon-deposit'; break; // Not implemented in UI
+                           case 'plan_purchase': iconClass = 'icon-plan'; typeText = `Plan: ${tx.details}`; amountPrefix = ''; amountClass='text-secondary'; break; // Purchase is a cost
+                           case 'mining': iconClass = 'icon-mining'; typeText = 'Mining Reward'; break; // Placeholder icon class
+                           case 'bonus': iconClass = 'icon-bonus'; typeText = `Bonus: ${tx.details}`; break;
+                           default: iconClass = '';
+                       }
+
+                     li.innerHTML = `
+                         <div class="activity-details">
+                             <span class="activity-type">
+                                <span class="icon ${iconClass}"></span> ${typeText}
+                             </span>
+                             <span class="activity-timestamp">${formatTimestamp(tx.timestamp)}</span>
+                         </div>
+                         <div class="activity-amount ${amountClass}">
+                             ${amountPrefix}${formatTRX(tx.amount)}
+                         </div>
+                     `;
+                     listElement.appendChild(li);
+                 });
+             }
+
+
+            // --- Mining Simulation ---
+            function startMining() {
+                if (miningInterval) clearInterval(miningInterval); // Clear existing interval if any
+
+                miningInterval = setInterval(() => {
+                    const earningsPerTick = (miningSpeedPerHour / 3600) * 5; // Calculate earnings every 5 seconds
+                    userBalance += earningsPerTick;
+                    totalMined += earningsPerTick;
+
+                    // Add smaller mining transactions less frequently to avoid clutter
+                    if (Math.random() < 0.05) { // ~Once per minute on average
+                        // Add a transaction for accumulated mining over a short period
+                        // This is just illustrative; real systems might log differently
+                        // addTransaction('mining', accumulated_amount_since_last_log, 'Periodic Reward');
+                    }
+
+                    updateDashboardDisplay(); // Update UI frequently for visual effect
+                }, 5000); // Update every 5 seconds
+            }
+
+            function stopMining() {
+                if (miningInterval) clearInterval(miningInterval);
+                miningInterval = null;
+            }
+
+            // --- UI Update Functions ---
+            function updateDashboardDisplay() {
+                if (!currentUserAddress) return; // Only update if logged in
+                balanceValueEl.textContent = formatTRX(userBalance);
+                speedValueEl.textContent = miningSpeedPerHour.toFixed(4) + ' TRX/Hr';
+                totalMinedValueEl.textContent = formatTRX(totalMined);
+                currentPlanNameEl.textContent = currentPlan.name;
+                referralLinkInput.value = `https://yoursite.com/ref/${currentUserAddress.substring(0, 8)}`; // Example link
+            }
+
+            function updateWithdrawDisplay() {
+                 if (!currentUserAddress) return;
+                 withdrawAddressEl.textContent = currentUserAddress;
+                 withdrawAvailableEl.textContent = formatTRX(userBalance);
+                 minWithdrawEl.textContent = MIN_WITHDRAWAL;
+                 withdrawFeeEl.textContent = WITHDRAWAL_FEE;
+            }
+
+            function displayPlans() {
+                plansListEl.innerHTML = ''; // Clear existing
+                mockPlans.forEach(plan => {
+                    const card = document.createElement('div');
+                    card.className = `card plan-card ${plan.popular ? 'popular' : ''}`;
+                    let featuresHTML = plan.features.map(f => `
+                        <li>
+                            <!-- SVG Placeholder: Checkmark -->
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+                            ${f}
+                        </li>`).join('');
+
+                    card.innerHTML = `
+                        ${plan.popular ? '<div style="position:absolute; top:10px; right:10px; background:var(--primary-red); color:white; padding: 3px 8px; border-radius:4px; font-size:0.8em; font-weight:bold;">POPULAR</div>' : ''}
+                        <div class="card-header">
+                             <!-- SVG Placeholder: Plan specific icon? -->
+                            <h4 class="plan-name">${plan.name}</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="plan-price">${plan.price > 0 ? plan.price + ' <span class="currency">TRX</span>' : 'FREE'}</div>
+                            <ul class="plan-features">
+                                ${featuresHTML}
+                            </ul>
+                            ${plan.id !== currentPlan.id ?
+                                `<button class="btn btn-primary buy-plan-btn" data-plan-id="${plan.id}" data-plan-price="${plan.price}">Choose Plan</button>` :
+                                `<button class="btn btn-secondary" disabled>Current Plan</button>`
+                            }
+                        </div>
+                    `;
+                    plansListEl.appendChild(card);
+                });
+
+                // Add event listeners AFTER creating the buttons
+                document.querySelectorAll('.buy-plan-btn').forEach(button => {
+                    button.addEventListener('click', handlePlanPurchase);
+                });
+            }
+
+
+            // --- Event Handlers ---
+            function handleLogin(event) {
+                event.preventDefault();
+                const address = trxAddressInput.value.trim();
+                loginError.textContent = ''; // Clear previous error
+
+                if (!isValidTRXAddress(address)) {
+                    loginError.textContent = 'Invalid TRX Address format.';
+                    return;
+                }
+
+                // --- SIMULATION ---
+                currentUserAddress = address;
+                // Reset state for new login (or load from localStorage if implemented)
+                userBalance = 0.0;
+                totalMined = 0.0;
+                currentPlan = mockPlans[0]; // Start with basic plan
+                miningSpeedPerHour = currentPlan.speed;
+                transactionHistory = []; // Clear history for new session
+                // Add a small initial bonus for demo purposes
+                const initialBonus = 1.5;
+                 userBalance += initialBonus;
+                 totalMined += initialBonus;
+                 addTransaction('bonus', initialBonus, 'Welcome Bonus');
+
+
+                // Update UI elements
+                updateDashboardDisplay();
+                updateWithdrawDisplay();
+                displayPlans(); // Display plans based on current plan
+                updateActivityLists(); // Render history
+
+                // Start mining simulation
+                startMining();
+
+                // Show Dashboard
+                showView('dashboard-view');
+            }
+
+            function handleLogout() {
+                stopMining();
+                currentUserAddress = null;
+                userBalance = 0;
+                totalMined = 0;
+                currentPlan = mockPlans[0];
+                miningSpeedPerHour = currentPlan.speed;
+                transactionHistory = [];
+                trxAddressInput.value = ''; // Clear input field
+                showView('login-view');
+            }
+
+            function handleNavClick(event) {
+                event.preventDefault();
+                if (event.target.classList.contains('nav-link') && event.target.dataset.view) {
+                    const viewId = event.target.dataset.view;
+                     // Update necessary data before showing view
+                     if (viewId === 'withdraw-view') updateWithdrawDisplay();
+                     if (viewId === 'plans-view') displayPlans();
+                     if (viewId === 'history-view') updateActivityLists(); // Render full history
+
+                    showView(viewId);
+                }
+            }
+
+             function handleMobileMenuToggle(event) {
+                // Find the sibling nav menu associated with this toggle
+                const navMenu = event.target.previousElementSibling; // Assumes nav is right before button
+                 if (navMenu && navMenu.classList.contains('main-nav')) {
+                     navMenu.classList.toggle('active');
+                 }
+             }
+
+            function handleCopyReferral() {
+                navigator.clipboard.writeText(referralLinkInput.value)
+                    .then(() => {
+                        copyStatusEl.textContent = 'Copied!';
+                        setTimeout(() => { copyStatusEl.textContent = ''; }, 2000);
+                    })
+                    .catch(err => {
+                        copyStatusEl.textContent = 'Failed to copy';
+                        console.error('Clipboard copy failed: ', err);
+                         setTimeout(() => { copyStatusEl.textContent = ''; }, 2000);
+                    });
+            }
+
+             function handlePlanPurchase(event) {
+                 const planId = parseInt(event.target.dataset.planId);
+                 const planPrice = parseFloat(event.target.dataset.planPrice);
+                 const selectedPlan = mockPlans.find(p => p.id === planId);
+                 planPurchaseStatusEl.textContent = '';
+                 planPurchaseStatusEl.className = 'text-center mt-3'; // Reset class
+
+                 if (!selectedPlan) return;
+
+                 if (userBalance >= planPrice) {
+                     // SIMULATE purchase
+                     userBalance -= planPrice;
+                     currentPlan = selectedPlan;
+                     miningSpeedPerHour = selectedPlan.speed;
+
+                     addTransaction('plan_purchase', -planPrice, selectedPlan.name);
+
+                     // Update displays
+                     updateDashboardDisplay();
+                     displayPlans(); // Re-render plans to show current plan as disabled
+
+                     planPurchaseStatusEl.textContent = `Successfully upgraded to ${selectedPlan.name}!`;
+                     planPurchaseStatusEl.classList.add('text-success');
+                 } else {
+                     planPurchaseStatusEl.textContent = 'Insufficient balance to purchase this plan.';
+                     planPurchaseStatusEl.classList.add('text-error');
+                 }
+                 setTimeout(() => { planPurchaseStatusEl.textContent = ''; }, 4000);
+             }
+
+            function handleWithdrawal(event) {
+                 event.preventDefault();
+                 const amount = parseFloat(withdrawAmountInput.value);
+                 withdrawStatusEl.textContent = '';
+                 withdrawStatusEl.className = 'text-center mt-3'; // Reset
+
+                 if (isNaN(amount) || amount <= 0) {
+                     withdrawStatusEl.textContent = 'Please enter a valid positive amount.';
+                     withdrawStatusEl.classList.add('text-error');
+                     return;
+                 }
+
+                 if (amount < MIN_WITHDRAWAL) {
+                      withdrawStatusEl.textContent = `Minimum withdrawal amount is ${MIN_WITHDRAWAL} TRX.`;
+                      withdrawStatusEl.classList.add('text-error');
+                      return;
+                 }
+
+                 const totalDeduction = amount + WITHDRAWAL_FEE;
+
+                 if (totalDeduction > userBalance) {
+                     withdrawStatusEl.textContent = 'Insufficient balance (including fee).';
+                     withdrawStatusEl.classList.add('text-error');
+                     return;
+                 }
+
+                 // --- SIMULATE WITHDRAWAL ---
+                 userBalance -= totalDeduction;
+                 addTransaction('withdraw', -amount, `To: ${currentUserAddress.substring(0,6)}...${currentUserAddress.substring(currentUserAddress.length-4)}`);
+                 // Optionally add fee transaction: addTransaction('fee', -WITHDRAWAL_FEE, 'Withdrawal Fee');
+
+                 withdrawStatusEl.textContent = `Withdrawal of ${formatTRX(amount)} requested successfully!`;
+                 withdrawStatusEl.classList.add('text-success');
+                 withdrawAmountInput.value = ''; // Clear input
+
+                 // Update displays
+                 updateDashboardDisplay();
+                 updateWithdrawDisplay();
+
+                 setTimeout(() => { withdrawStatusEl.textContent = ''; }, 4000);
+            }
+
+            // --- Attach Event Listeners ---
+            loginForm.addEventListener('submit', handleLogin);
+            logoutButtons.forEach(btn => btn.addEventListener('click', handleLogout));
+            navLinks.forEach(link => link.addEventListener('click', handleNavClick));
+            mobileMenuToggles.forEach(toggle => toggle.addEventListener('click', handleMobileMenuToggle));
+            copyRefBtn.addEventListener('click', handleCopyReferral);
+            withdrawForm.addEventListener('submit', handleWithdrawal);
+            // Plan purchase listeners are added dynamically in displayPlans()
+
+            // --- Initial Setup ---
+            // Check if user was previously "logged in" (using sessionStorage for simple persistence)
+            // const persistedAddress = sessionStorage.getItem('trxMinerUserAddress');
+            // if (persistedAddress) {
+            //     // Simulate re-login - you might want to load saved state here
+            //      trxAddressInput.value = persistedAddress;
+            //      handleLogin(new Event('submit')); // Trigger login flow
+            // } else {
+                 showView('login-view'); // Show login if no persisted session
+            // }
+             // For this demo, always start at login:
+             showView('login-view');
+
+        });
+    </script>
+
+</body>
+</html>
