@@ -1,0 +1,36 @@
+[
+  {
+    "id": "wd_001",
+    "userId": "user_001",
+    "amount": 1.00,
+    "points": 1000,
+    "paypalEmail": "user1@email.com",
+    "status": "completed",
+    "requestDate": "2025-07-05T10:00:00Z",
+    "processedDate": "2025-07-05T14:30:00Z",
+    "transactionId": "PAYPAL_TXN_001"
+  },
+  {
+    "id": "wd_002",
+    "userId": "user_002",
+    "amount": 2.00,
+    "points": 2000,
+    "paypalEmail": "user2@email.com",
+    "status": "pending",
+    "requestDate": "2025-07-06T08:15:00Z",
+    "processedDate": null,
+    "transactionId": null
+  },
+  {
+    "id": "wd_003",
+    "userId": "user_001",
+    "amount": 1.50,
+    "points": 1500,
+    "paypalEmail": "user1@email.com",
+    "status": "approved",
+    "requestDate": "2025-07-06T02:45:00Z",
+    "processedDate": null,
+    "transactionId": null
+  }
+]
+
