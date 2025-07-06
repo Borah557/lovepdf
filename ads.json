@@ -1,0 +1,93 @@
+[
+  {
+    "id": "ad_001",
+    "provider": "monetag",
+    "type": "banner",
+    "url": "https://monetag.com/ad/banner/123456",
+    "points": {
+      "min": 5,
+      "max": 8
+    },
+    "duration": 30,
+    "active": true,
+    "category": "general",
+    "title": "Monetag Banner Ad",
+    "description": "High-quality banner advertisement"
+  },
+  {
+    "id": "ad_002",
+    "provider": "monetag",
+    "type": "video",
+    "url": "https://monetag.com/ad/video/789012",
+    "points": {
+      "min": 6,
+      "max": 8
+    },
+    "duration": 45,
+    "active": true,
+    "category": "video",
+    "title": "Monetag Video Ad",
+    "description": "Engaging video advertisement"
+  },
+  {
+    "id": "ad_003",
+    "provider": "adsterra",
+    "type": "banner",
+    "url": "https://adsterra.com/ad/banner/345678",
+    "points": {
+      "min": 5,
+      "max": 7
+    },
+    "duration": 25,
+    "active": true,
+    "category": "general",
+    "title": "Adsterra Banner Ad",
+    "description": "Premium banner advertisement"
+  },
+  {
+    "id": "ad_004",
+    "provider": "adsterra",
+    "type": "interstitial",
+    "url": "https://adsterra.com/ad/interstitial/901234",
+    "points": {
+      "min": 6,
+      "max": 8
+    },
+    "duration": 35,
+    "active": true,
+    "category": "interstitial",
+    "title": "Adsterra Interstitial Ad",
+    "description": "Full-screen interstitial ad"
+  },
+  {
+    "id": "ad_005",
+    "provider": "monetag",
+    "type": "native",
+    "url": "https://monetag.com/ad/native/567890",
+    "points": {
+      "min": 5,
+      "max": 6
+    },
+    "duration": 20,
+    "active": true,
+    "category": "native",
+    "title": "Monetag Native Ad",
+    "description": "Native content advertisement"
+  },
+  {
+    "id": "ad_006",
+    "provider": "adsterra",
+    "type": "video",
+    "url": "https://adsterra.com/ad/video/123789",
+    "points": {
+      "min": 7,
+      "max": 8
+    },
+    "duration": 60,
+    "active": true,
+    "category": "video",
+    "title": "Adsterra Video Ad",
+    "description": "High-reward video advertisement"
+  }
+]
+
