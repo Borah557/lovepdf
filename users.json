@@ -1,0 +1,46 @@
+[
+  {
+    "id": "user_001",
+    "telegramId": "123456789",
+    "username": "@user1",
+    "email": "user1@email.com",
+    "balance": 1250,
+    "totalEarned": 2500,
+    "referralCode": "REF001",
+    "referredBy": null,
+    "adsWatched": 45,
+    "lastActive": "2025-07-06T05:30:00Z",
+    "withdrawals": [
+      {
+        "id": "wd_001",
+        "amount": 1.00,
+        "status": "completed",
+        "date": "2025-07-05T10:00:00Z"
+      }
+    ],
+    "referrals": ["user_002", "user_003"],
+    "dailyEarnings": {
+      "2025-07-06": 150,
+      "2025-07-05": 200
+    }
+  },
+  {
+    "id": "user_002",
+    "telegramId": "987654321",
+    "username": "@user2",
+    "email": "user2@email.com",
+    "balance": 750,
+    "totalEarned": 1200,
+    "referralCode": "REF002",
+    "referredBy": "user_001",
+    "adsWatched": 28,
+    "lastActive": "2025-07-06T04:15:00Z",
+    "withdrawals": [],
+    "referrals": [],
+    "dailyEarnings": {
+      "2025-07-06": 80,
+      "2025-07-05": 120
+    }
+  }
+]
+
