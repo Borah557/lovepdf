@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TeleMiner - Earn USD by Watching Ads</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-bg: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            --secondary-bg: rgba(255, 255, 255, 0.05);
+            --card-bg: rgba(255, 255, 255, 0.08);
+            --accent-color: #00d4ff;
+            --success-color: #4ade80;
+            --warning-color: #fbbf24;
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --blur-bg: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(74, 222, 128, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--accent-color);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+            color: #000;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--accent-color), var(--success-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .balance-display {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            padding: 12px 20px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .balance-amount {
+            font-weight: 600;
+            font-size: 18px;
+            color: var(--success-color);
+        }
+
+        .user-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #000;
+        }
+
+        /* Bento Grid Layout */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 30px;
+        }
+
+        .bento-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bento-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .bento-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-color);
+        }
+
+        .bento-card:hover::before {
+            opacity: 1;
+        }
+
+        /* Mining Dashboard */
+        .mining-dashboard {
+            grid-column: span 2;
+            text-align: center;
+        }
+
+        .mining-circle {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 24px;
+            position: relative;
+            border-radius: 50%;
+            background: conic-gradient(var(--accent-color) 0deg, var(--success-color) 120deg, var(--warning-color) 240deg, var(--accent-color) 360deg);
+            padding: 8px;
+            animation: rotate 10s linear infinite;
+        }
+
+        .mining-circle-inner {
+            width: 100%;
+            height: 100%;
+            background: var(--primary-bg);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .mining-rate {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--accent-color);
+            margin-bottom: 8px;
+        }
+
+        .mining-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .mining-controls {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 24px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: var(--accent-color);
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            background: #00b8e6;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--secondary-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--card-bg);
+            border-color: var(--accent-color);
+        }
+
+        /* Ad Viewing Section */
+        .ad-section {
+            text-align: center;
+        }
+
+        .ad-counter {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--warning-color);
+            margin-bottom: 16px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .ad-providers {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .provider-logo {
+            width: 60px;
+            height: 30px;
+            background: var(--secondary-bg);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid var(--border-color);
+        }
+
+        .watch-ad-btn {
+            background: linear-gradient(45deg, var(--warning-color), #f59e0b);
+            color: #000;
+            padding: 16px 32px;
+            border: none;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(251, 191, 36, 0.3);
+        }
+
+        .watch-ad-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(251, 191, 36, 0.4);
+        }
+
+        /* Statistics Cards */
+        .stat-card {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .stat-trend {
+            font-size: 12px;
+            margin-top: 8px;
+            padding: 4px 8px;
+            border-radius: 8px;
+            background: var(--secondary-bg);
+        }
+
+        /* Referral Section */
+        .referral-section {
+            grid-column: span 2;
+        }
+
+        .referral-link {
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin: 16px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .referral-url {
+            color: var(--text-secondary);
+            font-family: monospace;
+            font-size: 14px;
+        }
+
+        .copy-btn {
+            background: var(--accent-color);
+            color: #000;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        /* Withdrawal Section */
+        .withdrawal-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .input-field {
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .threshold-info {
+            background: var(--secondary-bg);
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            display: none;
+            grid-column: span 2;
+            background: var(--card-bg);
+            border: 2px solid var(--warning-color);
+            border-radius: 24px;
+            padding: 24px;
+        }
+
+        .admin-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--warning-color);
+            color: #000;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            z-index: 1000;
+        }
+
+        .admin-tabs {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .admin-tab {
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .admin-tab.active {
+            color: var(--accent-color);
+            border-bottom-color: var(--accent-color);
+        }
+
+        .admin-content {
+            display: none;
+        }
+
+        .admin-content.active {
+            display: block;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table th {
+            background: var(--secondary-bg);
+            font-weight: 600;
+        }
+
+        /* Animations */
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide-in {
+            animation: slideIn 0.6s ease-out;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+
+            .bento-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .mining-dashboard,
+            .referral-section,
+            .admin-panel {
+                grid-column: span 1;
+            }
+
+            .mining-circle {
+                width: 160px;
+                height: 160px;
+            }
+
+            .mining-rate {
+                font-size: 24px;
+            }
+
+            .ad-counter {
+                font-size: 36px;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+        }
+
+        /* Loading States */
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border-color);
+            border-top: 2px solid var(--accent-color);
+            border-radius: 50%;
+            animation: rotate 1s linear infinite;
+        }
+
+        /* Success/Error Messages */
+        .message {
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin: 16px 0;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .message.success {
+            background: rgba(74, 222, 128, 0.1);
+            border: 1px solid var(--success-color);
+            color: var(--success-color);
+        }
+
+        .message.error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid #ef4444;
+            color: #ef4444;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Admin Toggle Button -->
+        <button class="admin-toggle" onclick="toggleAdmin()">Admin</button>
+
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">TM</div>
+                <div class="logo-text">TeleMiner</div>
+            </div>
+            <div class="user-info">
+                <div class="balance-display">
+                    <span>💰</span>
+                    <span class="balance-amount" id="userBalance">0</span>
+                    <span>points</span>
+                </div>
+                <div class="user-avatar" id="userAvatar">U</div>
+            </div>
+        </header>
+
+        <!-- Main Bento Grid -->
+        <div class="bento-grid">
+            <!-- Mining Dashboard -->
+            <div class="bento-card mining-dashboard slide-in">
+                <h2 style="margin-bottom: 24px; font-size: 24px;">Mining Dashboard</h2>
+                <div class="mining-circle">
+                    <div class="mining-circle-inner">
+                        <div class="mining-rate" id="miningRate">0</div>
+                        <div class="mining-label">Points/Hour</div>
+                    </div>
+                </div>
+                <div class="mining-controls">
+                    <button class="btn btn-primary" id="startMiningBtn" onclick="toggleMining()">
+                        ▶️ Start Mining
+                    </button>
+                    <button class="btn btn-secondary" onclick="showStats()">
+                        📊 Statistics
+                    </button>
+                </div>
+                <div style="margin-top: 20px; text-align: center;">
+                    <div style="color: var(--text-secondary); font-size: 14px;">Today's Earnings</div>
+                    <div style="font-size: 24px; font-weight: 700; color: var(--success-color);" id="todayEarnings">0 points</div>
+                </div>
+            </div>
+
+            <!-- Ad Viewing Section -->
+            <div class="bento-card ad-section slide-in">
+                <h3 style="margin-bottom: 16px;">Watch Ads & Earn</h3>
+                <div class="ad-counter" id="availableAds">12</div>
+                <div style="color: var(--text-secondary); margin-bottom: 16px;">Available Ads</div>
+                
+                <div class="ad-providers">
+                    <div class="provider-logo">Monetag</div>
+                    <div class="provider-logo">Adsterra</div>
+                </div>
+                
+                <button class="watch-ad-btn" onclick="watchAd()">
+                    👀 Watch Ad (+5-8 pts)
+                </button>
+                
+                <div style="margin-top: 16px; font-size: 12px; color: var(--text-secondary);">
+                    Last watched: <span id="lastAdTime">Never</span>
+                </div>
+            </div>
+
+            <!-- Total Earnings -->
+            <div class="bento-card stat-card slide-in">
+                <div class="stat-value" style="color: var(--success-color);" id="totalEarnings">0</div>
+                <div class="stat-label">Total Earned</div>
+                <div class="stat-trend">+0% this week</div>
+            </div>
+
+            <!-- Referrals -->
+            <div class="bento-card stat-card slide-in">
+                <div class="stat-value" style="color: var(--accent-color);" id="referralCount">0</div>
+                <div class="stat-label">Referrals</div>
+                <div class="stat-trend" id="referralEarnings">$0.00 earned</div>
+            </div>
+
+            <!-- Withdrawal Section -->
+            <div class="bento-card slide-in">
+                <h3>💸 Withdraw Earnings</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 20px;">
+                    Minimum withdrawal: 1000 points = $1.00 USD
+                </p>
+                
+                <div class="form-group">
+                    <label for="paypalEmail">PayPal Email</label>
+                    <input type="email" id="paypalEmail" placeholder="your@email.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="withdrawAmount">Amount (USD)</label>
+                    <input type="number" id="withdrawAmount" placeholder="1.00" min="1" step="0.01" required>
+                    <small style="color: var(--text-secondary); font-size: 12px;">
+                        Available: $<span id="availableUSD">0.00</span> (<span id="availablePoints">0</span> points)
+                    </small>
+                </div>
+                
+                <button class="btn btn-primary" onclick="requestWithdrawal()" style="width: 100%; margin-bottom: 16px;">
+                    💸 Request Withdrawal
+                </button>
+                
+                <div style="font-size: 12px; color: var(--text-secondary); text-align: center;">
+                    Processing time: 24-48 hours
+                </div>
+                
+                <!-- Withdrawal History -->
+                <div style="margin-top: 24px;">
+                    <h4 style="font-size: 16px; margin-bottom: 12px; color: var(--text-primary);">Recent Withdrawals</h4>
+                    <div id="withdrawalHistory" style="max-height: 200px; overflow-y: auto;">
+                        <div style="text-align: center; color: var(--text-secondary); padding: 20px;">
+                            No withdrawals yet
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Demo Buttons for Testing -->
+                <div style="display: flex; gap: 8px; margin-top: 16px; justify-content: center;">
+                    <button class="btn btn-secondary" onclick="addDemoPoints()" style="padding: 6px 12px; font-size: 11px;">
+                        💎 Add 1000 Points
+                    </button>
+                    <button class="btn btn-secondary" onclick="addDemoWithdrawal()" style="padding: 6px 12px; font-size: 11px;">
+                        📋 Demo History
+                    </button>
+                </div>
+            </div>
+
+        <!-- Referral System -->
+            <div class="bento-card referral-section slide-in">
+                <h3 style="margin-bottom: 16px;">Referral System</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 16px;">
+                    Earn 25% commission from your referrals' earnings!
+                </p>
+                
+                <div class="referral-link">
+                    <span class="referral-url" id="referralLink">https://t.me/teleminer_bot?start=REF123456</span>
+                    <button class="copy-btn" onclick="copyReferralLink()">Copy</button>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 16px; margin-top: 20px;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 20px; font-weight: 700; color: var(--accent-color);" id="activeReferrals">0</div>
+                        <div style="font-size: 12px; color: var(--text-secondary);">Active Referrals</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 20px; font-weight: 700; color: var(--success-color);" id="referralCommission">$0.00</div>
+                        <div style="font-size: 12px; color: var(--text-secondary);">Commission Earned</div>
+                    </div>
+                </div>
+                
+                <!-- Demo Buttons for Testing -->
+                <div style="display: flex; gap: 12px; margin-top: 20px; justify-content: center;">
+                    <button class="btn btn-secondary" onclick="addDemoReferral()" style="padding: 8px 16px; font-size: 12px;">
+                        ➕ Add Demo Referral
+                    </button>
+                    <button class="btn btn-secondary" onclick="simulateReferralActivity()" style="padding: 8px 16px; font-size: 12px;">
+                        💰 Simulate Commission
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Panel -->
+        <div class="admin-panel" id="adminPanel">
+            <h2 style="margin-bottom: 24px; color: var(--warning-color);">Admin Panel</h2>
+            
+            <div class="admin-tabs">
+                <button class="admin-tab active" onclick="showAdminTab('users')">Users</button>
+                <button class="admin-tab" onclick="showAdminTab('ads')">Ads</button>
+                <button class="admin-tab" onclick="showAdminTab('withdrawals')">Withdrawals</button>
+                <button class="admin-tab" onclick="showAdminTab('settings')">Settings</button>
+            </div>
+
+            <div class="admin-content active" id="admin-users">
+                <h3>User Management</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>User ID</th>
+                            <th>Username</th>
+                            <th>Balance</th>
+                            <th>Total Earned</th>
+                            <th>Referrals</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTable">
+                        <tr>
+                            <td>001</td>
+                            <td>@user1</td>
+                            <td>1250 pts</td>
+                            <td>$2.50</td>
+                            <td>3</td>
+                            <td>
+                                <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;">Edit</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="admin-content" id="admin-ads">
+                <h3>Ad Configuration</h3>
+                <div style="margin-bottom: 20px;">
+                    <button class="btn btn-primary">Add New Ad</button>
+                    <button class="btn btn-secondary">Refresh Ads</button>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Provider</th>
+                            <th>Ad Type</th>
+                            <th>Points</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Monetag</td>
+                            <td>Banner</td>
+                            <td>5-8</td>
+                            <td>Active</td>
+                            <td>
+                                <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;">Edit</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Adsterra</td>
+                            <td>Video</td>
+                            <td>5-8</td>
+                            <td>Active</td>
+                            <td>
+                                <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;">Edit</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="admin-content" id="admin-withdrawals">
+                <h3>Withdrawal Management</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Amount</th>
+                            <th>PayPal Email</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>@user1</td>
+                            <td>$1.00</td>
+                            <td>user1@email.com</td>
+                            <td>Pending</td>
+                            <td>2025-07-06</td>
+                            <td>
+                                <button class="btn btn-primary" style="padding: 4px 8px; font-size: 12px;">Approve</button>
+                                <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;">Reject</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="admin-content" id="admin-settings">
+                <h3>System Settings</h3>
+                <div style="display: grid; gap: 16px;">
+                    <div class="input-group">
+                        <label class="input-label">Minimum Withdrawal (Points)</label>
+                        <input type="number" class="input-field" value="1000">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Points to USD Rate</label>
+                        <input type="number" class="input-field" value="1000" step="100">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Referral Commission (%)</label>
+                        <input type="number" class="input-field" value="25" min="0" max="100">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Ad Cooldown (seconds)</label>
+                        <input type="number" class="input-field" value="30" min="10">
+                    </div>
+                    <button class="btn btn-primary">Save Settings</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let userData = {
+            id: 'user_' + Date.now(),
+            username: '@user',
+            balance: 0,
+            totalEarned: 0,
+            referralCode: 'REF' + Math.random().toString(36).substr(2, 6).toUpperCase(),
+            referrals: [],
+            adsWatched: 0,
+            isMining: false,
+            lastAdTime: null,
+            withdrawals: [],
+            dailyEarnings: {},
+            adCooldowns: {},
+            preferences: {
+                adTypes: ['banner', 'video', 'native', 'interstitial']
+            }
+        };
+
+        let miningInterval = null;
+        let adCooldown = false;
+        let availableAds = [];
+        let adProviders = {
+            monetag: {
+                name: 'Monetag',
+                active: true,
+                totalAds: 0,
+                earnedToday: 0
+            },
+            adsterra: {
+                name: 'Adsterra',
+                active: true,
+                totalAds: 0,
+                earnedToday: 0
+            }
+        };
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserData();
+            loadAdsData();
+            updateUI();
+            generateReferralLink();
+            updateAdCounter();
+        });
+
+        // Load ads data
+        async function loadAdsData() {
+            try {
+                // In a real app, this would fetch from the JSON file
+                // For demo purposes, we'll use the predefined ads
+                availableAds = [
+                    {
+                        id: "ad_001",
+                        provider: "monetag",
+                        type: "banner",
+                        points: { min: 5, max: 8 },
+                        duration: 30,
+                        active: true,
+                        title: "Monetag Banner Ad"
+                    },
+                    {
+                        id: "ad_002",
+                        provider: "monetag",
+                        type: "video",
+                        points: { min: 6, max: 8 },
+                        duration: 45,
+                        active: true,
+                        title: "Monetag Video Ad"
+                    },
+                    {
+                        id: "ad_003",
+                        provider: "adsterra",
+                        type: "banner",
+                        points: { min: 5, max: 7 },
+                        duration: 25,
+                        active: true,
+                        title: "Adsterra Banner Ad"
+                    },
+                    {
+                        id: "ad_004",
+                        provider: "adsterra",
+                        type: "interstitial",
+                        points: { min: 6, max: 8 },
+                        duration: 35,
+                        active: true,
+                        title: "Adsterra Interstitial Ad"
+                    },
+                    {
+                        id: "ad_005",
+                        provider: "monetag",
+                        type: "native",
+                        points: { min: 5, max: 6 },
+                        duration: 20,
+                        active: true,
+                        title: "Monetag Native Ad"
+                    },
+                    {
+                        id: "ad_006",
+                        provider: "adsterra",
+                        type: "video",
+                        points: { min: 7, max: 8 },
+                        duration: 60,
+                        active: true,
+                        title: "Adsterra Video Ad"
+                    }
+                ];
+                
+                updateAdCounter();
+            } catch (error) {
+                console.error('Failed to load ads data:', error);
+                showMessage('Failed to load ads. Please refresh the page.', 'error');
+            }
+        }
+
+        // Update available ads counter
+        function updateAdCounter() {
+            const activeAds = availableAds.filter(ad => ad.active && !isAdOnCooldown(ad.id));
+            document.getElementById('availableAds').textContent = activeAds.length;
+        }
+
+        // Check if ad is on cooldown
+        function isAdOnCooldown(adId) {
+            const cooldownKey = `${adId}_${getTodayDateString()}`;
+            const lastWatched = userData.adCooldowns[cooldownKey];
+            if (!lastWatched) return false;
+            
+            const cooldownTime = 300000; // 5 minutes cooldown per ad
+            return (Date.now() - lastWatched) < cooldownTime;
+        }
+
+        // Get today's date string
+        function getTodayDateString() {
+            return new Date().toISOString().split('T')[0];
+        }
+
+        // Load user data from localStorage
+        function loadUserData() {
+            const saved = localStorage.getItem('telegramMinerData');
+            if (saved) {
+                userData = { ...userData, ...JSON.parse(saved) };
+            }
+        }
+
+        // Save user data to localStorage
+        function saveUserData() {
+            localStorage.setItem('telegramMinerData', JSON.stringify(userData));
+        }
+
+        // Update UI elements
+        function updateUI() {
+            document.getElementById('userBalance').textContent = userData.balance;
+            document.getElementById('totalEarnings').textContent = userData.totalEarned;
+            document.getElementById('referralCount').textContent = userData.referrals.length;
+            document.getElementById('todayEarnings').textContent = getTodayEarnings() + ' points';
+            document.getElementById('activeReferrals').textContent = userData.referrals.length;
+            
+            // Update referral commission display
+            const commissionEarned = getReferralEarnings();
+            document.getElementById('referralCommission').textContent = '$' + (commissionEarned / 1000).toFixed(2);
+            
+            // Update available withdrawal amounts
+            const availableUSD = (userData.balance / 1000).toFixed(2);
+            document.getElementById('availableUSD').textContent = availableUSD;
+            document.getElementById('availablePoints').textContent = userData.balance;
+            
+            if (userData.lastAdTime) {
+                document.getElementById('lastAdTime').textContent = new Date(userData.lastAdTime).toLocaleTimeString();
+            }
+            
+            updateAdCounter();
+            updateWithdrawalHistory();
+        }
+
+        // Update withdrawal history display
+        function updateWithdrawalHistory() {
+            const historyContainer = document.getElementById('withdrawalHistory');
+            
+            if (!userData.withdrawals || userData.withdrawals.length === 0) {
+                historyContainer.innerHTML = `
+                    <div style="text-align: center; color: var(--text-secondary); padding: 20px;">
+                        No withdrawals yet
+                    </div>
+                `;
+                return;
+            }
+            
+            const historyHTML = userData.withdrawals.slice(-5).reverse().map(withdrawal => {
+                const statusColor = {
+                    'pending': '#ffa500',
+                    'approved': '#00bcd4',
+                    'completed': '#4caf50',
+                    'rejected': '#f44336'
+                }[withdrawal.status] || '#666';
+                
+                const statusIcon = {
+                    'pending': '⏳',
+                    'approved': '✅',
+                    'completed': '💰',
+                    'rejected': '❌'
+                }[withdrawal.status] || '⏳';
+                
+                return `
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 8px; background: var(--card-bg);">
+                        <div>
+                            <div style="font-weight: 600; color: var(--text-primary);">$${withdrawal.amount.toFixed(2)}</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">${new Date(withdrawal.requestDate).toLocaleDateString()}</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="color: ${statusColor}; font-weight: 600; font-size: 12px;">
+                                ${statusIcon} ${withdrawal.status.toUpperCase()}
+                            </div>
+                            <div style="font-size: 10px; color: var(--text-secondary);">${withdrawal.points} pts</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            historyContainer.innerHTML = historyHTML;
+        }
+
+        // Generate referral link
+        function generateReferralLink() {
+            const link = `https://t.me/teleminer_bot?start=${userData.referralCode}`;
+            document.getElementById('referralLink').textContent = link;
+        }
+
+        // Copy referral link
+        function copyReferralLink() {
+            const link = document.getElementById('referralLink').textContent;
+            navigator.clipboard.writeText(link).then(() => {
+                showMessage('Referral link copied to clipboard!', 'success');
+            });
+        }
+
+        // Toggle mining
+        function toggleMining() {
+            const btn = document.getElementById('startMiningBtn');
+            const rateDisplay = document.getElementById('miningRate');
+            
+            if (!userData.isMining) {
+                userData.isMining = true;
+                btn.innerHTML = '⏸️ Stop Mining';
+                btn.classList.remove('btn-primary');
+                btn.classList.add('btn-secondary');
+                
+                // Simulate mining with passive income
+                miningInterval = setInterval(() => {
+                    const points = Math.floor(Math.random() * 3) + 2; // 2-4 points per hour
+                    userData.balance += points;
+                    userData.totalEarned += points;
+                    addTodayEarnings(points);
+                    updateUI();
+                    saveUserData();
+                }, 3600000); // Every hour
+                
+                rateDisplay.textContent = '3';
+                showMessage('Mining started! You will earn 2-4 points per hour.', 'success');
+            } else {
+                userData.isMining = false;
+                btn.innerHTML = '▶️ Start Mining';
+                btn.classList.remove('btn-secondary');
+                btn.classList.add('btn-primary');
+                
+                if (miningInterval) {
+                    clearInterval(miningInterval);
+                }
+                
+                rateDisplay.textContent = '0';
+                showMessage('Mining stopped.', 'success');
+            }
+            
+            saveUserData();
+        }
+
+        // Add to today's earnings
+        function addTodayEarnings(points) {
+            const today = getTodayDateString();
+            if (!userData.dailyEarnings[today]) {
+                userData.dailyEarnings[today] = 0;
+            }
+            userData.dailyEarnings[today] += points;
+        }
+
+        // Enhanced watch ad function
+        function watchAd() {
+            if (adCooldown) {
+                showMessage('Please wait before watching another ad.', 'error');
+                return;
+            }
+            
+            // Get available ads (not on cooldown)
+            const activeAds = availableAds.filter(ad => ad.active && !isAdOnCooldown(ad.id));
+            
+            if (activeAds.length === 0) {
+                showMessage('No ads available right now. Please try again later.', 'error');
+                return;
+            }
+            
+            // Select random ad
+            const selectedAd = activeAds[Math.floor(Math.random() * activeAds.length)];
+            const points = Math.floor(Math.random() * (selectedAd.points.max - selectedAd.points.min + 1)) + selectedAd.points.min;
+            
+            // Update UI to show ad loading
+            const btn = document.querySelector('.watch-ad-btn');
+            btn.innerHTML = '⏳ Loading Ad...';
+            btn.disabled = true;
+            
+            // Simulate ad viewing process
+            setTimeout(() => {
+                btn.innerHTML = `📺 Watching ${selectedAd.provider} ${selectedAd.type}...`;
+                
+                setTimeout(() => {
+                    // Ad completed
+                    userData.balance += points;
+                    userData.totalEarned += points;
+                    userData.adsWatched++;
+                    userData.lastAdTime = Date.now();
+                    addTodayEarnings(points);
+                    
+                    // Set ad-specific cooldown
+                    const cooldownKey = `${selectedAd.id}_${getTodayDateString()}`;
+                    userData.adCooldowns[cooldownKey] = Date.now();
+                    
+                    // Update provider stats
+                    adProviders[selectedAd.provider].totalAds++;
+                    adProviders[selectedAd.provider].earnedToday += points;
+                    
+                    btn.innerHTML = `✅ Earned ${points} points!`;
+                    
+                    setTimeout(() => {
+                        btn.innerHTML = '👀 Watch Ad (+5-8 pts)';
+                        btn.disabled = false;
+                    }, 2000);
+                    
+                    updateUI();
+                    saveUserData();
+                    showMessage(`You earned ${points} points from ${selectedAd.provider} ${selectedAd.type} ad!`, 'success');
+                    
+                    // Process referral commission
+                    processReferralCommission(points);
+                    
+                }, selectedAd.duration * 100); // Simulate ad duration (scaled down for demo)
+                
+            }, 2000);
+            
+            // Set global cooldown
+            adCooldown = true;
+            setTimeout(() => {
+                adCooldown = false;
+            }, 30000); // 30 seconds global cooldown
+        }
+
+        // Process referral commission
+        function processReferralCommission(points) {
+            // In a real app, this would update the referrer's balance
+            if (userData.referredBy) {
+                const commission = Math.floor(points * 0.25);
+                console.log(`Referral commission: ${commission} points for referrer ${userData.referredBy}`);
+                
+                // Track commission for display
+                if (!userData.commissionEarned) {
+                    userData.commissionEarned = 0;
+                }
+                userData.commissionEarned += commission;
+                
+                // In a real app, you would update the referrer's balance here
+                // updateReferrerBalance(userData.referredBy, commission);
+            }
+        }
+
+        // Add referral (simulate when someone uses referral link)
+        function addReferral(newUserId) {
+            if (!userData.referrals.includes(newUserId)) {
+                userData.referrals.push(newUserId);
+                userData.totalReferrals = userData.referrals.length;
+                
+                // Bonus for successful referral
+                const referralBonus = 50; // 50 points bonus for each referral
+                userData.balance += referralBonus;
+                userData.totalEarned += referralBonus;
+                addTodayEarnings(referralBonus);
+                
+                showMessage(`New referral added! You earned ${referralBonus} bonus points!`, 'success');
+                updateUI();
+                saveUserData();
+            }
+        }
+
+        // Simulate referral activity (for demo purposes)
+        function simulateReferralActivity() {
+            const referralActivities = [
+                'user_ref_001 earned 5 points',
+                'user_ref_002 earned 7 points', 
+                'user_ref_003 earned 6 points'
+            ];
+            
+            const activity = referralActivities[Math.floor(Math.random() * referralActivities.length)];
+            const points = parseInt(activity.match(/\d+/)[0]);
+            const commission = Math.floor(points * 0.25);
+            
+            if (userData.referrals.length > 0) {
+                userData.balance += commission;
+                userData.totalEarned += commission;
+                addTodayEarnings(commission);
+                
+                if (!userData.commissionEarned) {
+                    userData.commissionEarned = 0;
+                }
+                userData.commissionEarned += commission;
+                
+                showMessage(`Referral commission: +${commission} points from ${activity}`, 'success');
+                updateUI();
+                saveUserData();
+            }
+        }
+
+        // Enhanced referral link generation with tracking
+        function generateReferralLink() {
+            const baseUrl = 'https://t.me/teleminer_bot?start=';
+            const link = `${baseUrl}${userData.referralCode}`;
+            document.getElementById('referralLink').textContent = link;
+            
+            // Track link generation
+            if (!userData.referralStats) {
+                userData.referralStats = {
+                    linksGenerated: 0,
+                    clicks: 0,
+                    conversions: 0
+                };
+            }
+            userData.referralStats.linksGenerated++;
+        }
+
+        // Copy referral link with tracking
+        function copyReferralLink() {
+            const link = document.getElementById('referralLink').textContent;
+            navigator.clipboard.writeText(link).then(() => {
+                showMessage('Referral link copied to clipboard!', 'success');
+                
+                // Track copy action
+                if (!userData.referralStats) {
+                    userData.referralStats = {
+                        linksGenerated: 0,
+                        clicks: 0,
+                        conversions: 0
+                    };
+                }
+                userData.referralStats.clicks++;
+                saveUserData();
+            });
+        }
+
+        // Get referral earnings
+        function getReferralEarnings() {
+            return userData.commissionEarned || 0;
+        }
+
+        // Simulate adding referrals for demo
+        function addDemoReferral() {
+            const demoUsers = ['user_demo_1', 'user_demo_2', 'user_demo_3'];
+            const randomUser = demoUsers[Math.floor(Math.random() * demoUsers.length)];
+            addReferral(randomUser);
+        }
+
+        // Add demo points for testing withdrawal
+        function addDemoPoints() {
+            const bonusPoints = 1000;
+            userData.balance += bonusPoints;
+            userData.totalEarned += bonusPoints;
+            addTodayEarnings(bonusPoints);
+            
+            showMessage(`Added ${bonusPoints} demo points for testing!`, 'success');
+            updateUI();
+            saveUserData();
+        }
+
+        // Add demo withdrawal for testing
+        function addDemoWithdrawal() {
+            const demoWithdrawal = {
+                id: 'wd_demo_' + Date.now(),
+                amount: 1.50,
+                points: 1500,
+                email: 'demo@example.com',
+                status: 'completed',
+                requestDate: new Date(Date.now() - 86400000).toISOString(), // Yesterday
+                processedDate: new Date().toISOString()
+            };
+            
+            if (!userData.withdrawals) {
+                userData.withdrawals = [];
+            }
+            userData.withdrawals.push(demoWithdrawal);
+            
+            showMessage('Demo withdrawal added to history!', 'success');
+            updateUI();
+            saveUserData();
+        }
+
+        // Request withdrawal
+        function requestWithdrawal() {
+            const email = document.getElementById('paypalEmail').value;
+            const amount = parseFloat(document.getElementById('withdrawAmount').value);
+            
+            if (!email || !amount) {
+                showMessage('Please fill in all fields.', 'error');
+                return;
+            }
+            
+            if (!isValidEmail(email)) {
+                showMessage('Please enter a valid PayPal email address.', 'error');
+                return;
+            }
+            
+            const requiredPoints = amount * 1000;
+            if (userData.balance < requiredPoints) {
+                showMessage(`Insufficient balance. You need ${requiredPoints} points.`, 'error');
+                return;
+            }
+            
+            if (amount < 1) {
+                showMessage('Minimum withdrawal is $1.00', 'error');
+                return;
+            }
+            
+            const withdrawal = {
+                id: 'wd_' + Date.now(),
+                amount: amount,
+                points: requiredPoints,
+                email: email,
+                status: 'pending',
+                requestDate: new Date().toISOString(),
+                processedDate: null
+            };
+            
+            userData.withdrawals.push(withdrawal);
+            userData.balance -= requiredPoints;
+            
+            updateUI();
+            saveUserData();
+            showMessage('Withdrawal request submitted successfully! Processing time: 24-48 hours.', 'success');
+            
+            // Clear form
+            document.getElementById('paypalEmail').value = '';
+            document.getElementById('withdrawAmount').value = '';
+        }
+
+        // Validate email
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // Show message
+        function showMessage(text, type) {
+            const message = document.createElement('div');
+            message.className = `message ${type}`;
+            message.textContent = text;
+            
+            document.querySelector('.container').insertBefore(message, document.querySelector('.bento-grid'));
+            
+            setTimeout(() => {
+                message.remove();
+            }, 5000);
+        }
+
+        // Get today's earnings
+        function getTodayEarnings() {
+            const today = getTodayDateString();
+            return userData.dailyEarnings[today] || 0;
+        }
+
+        // Admin functions
+        function toggleAdmin() {
+            const panel = document.getElementById('adminPanel');
+            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function showAdminTab(tab) {
+            // Remove active class from all tabs and contents
+            document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.admin-content').forEach(c => c.classList.remove('active'));
+            
+            // Add active class to selected tab and content
+            event.target.classList.add('active');
+            document.getElementById(`admin-${tab}`).classList.add('active');
+        }
+
+        function showStats() {
+            const stats = `
+Statistics:
+
+Total Ads Watched: ${userData.adsWatched}
+Total Earnings: ${userData.totalEarned} points
+Today's Earnings: ${getTodayEarnings()} points
+Referrals: ${userData.referrals.length}
+Withdrawals: ${userData.withdrawals.length}
+Mining Status: ${userData.isMining ? 'Active' : 'Inactive'}
+
+Provider Stats:
+Monetag: ${adProviders.monetag.totalAds} ads watched
+Adsterra: ${adProviders.adsterra.totalAds} ads watched
+            `;
+            alert(stats);
+        }
+
+        // Simulate real-time ad availability updates
+        setInterval(() => {
+            updateAdCounter();
+        }, 60000); // Update every minute
+
+        // Auto-save every 30 seconds
+        setInterval(saveUserData, 30000);
+
+        // Simulate Telegram WebApp environment
+        if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.ready();
+            window.Telegram.WebApp.expand();
+        }
+    </script>
+</body>
+</html>
+
